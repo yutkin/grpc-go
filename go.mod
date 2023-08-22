@@ -29,3 +29,5 @@ require (
 	google.golang.org/genproto v0.0.0-20230711160842-782d3b101e98 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230711160842-782d3b101e98 // indirect
 )
+
+replace google.golang.org/grpc => github.com/yutkin/grpc-go v0.0.0-20230822083113-3c96f8783921
