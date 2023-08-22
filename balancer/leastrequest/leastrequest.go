@@ -153,7 +153,8 @@ type picker struct {
 	subConns []scWithRPCCount
 }
 
-func (p *picker) Pick(balancer.PickInfo) (balancer.PickResult, error) {
+func (p *picker) Pick(pInfo balancer.PickInfo) (balancer.PickResult, error) {
+	logger.Infof("least-request: Pick info: %+v", pInfo)
 	var pickedSC *scWithRPCCount
 	for i := 0; i < int(p.choiceCount); i++ {
 		index := grpcranduint32() % uint32(len(p.subConns))
@@ -175,8 +176,12 @@ func (p *picker) Pick(balancer.PickInfo) (balancer.PickResult, error) {
 	done := func(balancer.DoneInfo) {
 		atomic.AddInt32(pickedSC.numRPCs, -1)
 	}
-	return balancer.PickResult{
+
+	pickRes := balancer.PickResult{
 		SubConn: pickedSC.sc,
 		Done:    done,
-	}, nil
+	}
+	logger.Infof("least-request: Pick result: %+v", pickRes)
+
+	return pickRes, nil
 }
